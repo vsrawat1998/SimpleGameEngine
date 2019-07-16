@@ -1,13 +1,8 @@
 #include "MainGame.h"
+#include "Errors.h"
+#include<iostream>
+#include<string>
 
-
-void fatalError(std::string errString) {
-	std::cout << errString << "\n";
-	std::cout << "Enter any key to exit...";
-	int x;
-	std::cin >> x;
-	SDL_Quit();
-}
 MainGame::MainGame() {
 	
 	_window = nullptr; // If the Window does not open up due to some issue, then null pointer violation will
@@ -53,7 +48,16 @@ void MainGame::initSystems() {
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 	glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+
+	initShaders();
 }
+
+void MainGame::initShaders() {
+	_colorProgram.compileShaders("Shaders/colorShading.vert", "Shaders/colorShading.frag");
+	_colorProgram.addAttribute("vertexPosition");
+	_colorProgram.linkShaders();
+}
+
 void MainGame::processInput() {
 	SDL_Event evnt;
 	while (SDL_PollEvent(&evnt)) {
@@ -80,7 +84,12 @@ void MainGame::drawGame() {
 	//Clear the color and depth buffer
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
+
+	_colorProgram.use();
+
 	_sprite.draw();
+
+	_colorProgram.unuse();
 
 	//Swap the buffer and draw onto the screen.
 	SDL_GL_SwapWindow(_window);

@@ -1,7 +1,6 @@
 #include "Sprite.h"
 
-Sprite::Sprite() {
-	_vboID = 0;
+Sprite::Sprite():_vboID(0) {
 }
 Sprite::~Sprite() {
 	if (_vboID != 0) {
@@ -13,7 +12,6 @@ void Sprite::init(float x, float y, float width, float height) {
 	_y = y;
 	_width = width;
 	_height = height;
-
 	if (!_vboID) {
 		glGenBuffers(1, &_vboID);
 	}
