@@ -6,8 +6,5 @@ int main(int argc,char** argv) { // The parameters are required so that the SDL 
 
 	MainGame mainGame;
 	mainGame.run();
-	cout << "Enter any key to quit!!!";
-	char a;
-	cin >> a; 
 	return 0;
 }
