@@ -17,7 +17,9 @@ class MainGame
 	GameState _gameState;
 	Sprite _sprite;
 	GLSLProgram _colorProgram;
+
 	int _screenWidth, _screenHeight;
+	float _time;
 
 	void initSystems();
 	void initShaders();

@@ -3,15 +3,14 @@
 #include<iostream>
 #include<string>
 
-MainGame::MainGame() {
+MainGame::MainGame():
+	_window(nullptr),
+	_gameState(GameState::PLAY),
+	_screenWidth(500), 
+	_screenHeight(500),
+	_time(0) 
+{
 	
-	_window = nullptr; // If the Window does not open up due to some issue, then null pointer violation will
-	// help us identify it.
-
-	// Initial parameter values for testing purposes 
-	_screenWidth = 500;
-	_screenHeight = 500;
-	_gameState = GameState::PLAY;
 }
 MainGame::~MainGame() {
 	
@@ -19,7 +18,7 @@ MainGame::~MainGame() {
 void MainGame::run() {
 	initSystems();
 
-	_sprite.init(-1.0f, -1.0f, 1.0f, 1.0f);
+	_sprite.init(-1.0f, -1.0f, 2.0f, 2.0f);
 
 	gameLoop();
 }
@@ -47,7 +46,7 @@ void MainGame::initSystems() {
 	// Uses a double buffer Window to prevent flickering
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-	glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
 
 	initShaders();
 }
@@ -55,6 +54,7 @@ void MainGame::initSystems() {
 void MainGame::initShaders() {
 	_colorProgram.compileShaders("Shaders/colorShading.vert", "Shaders/colorShading.frag");
 	_colorProgram.addAttribute("vertexPosition");
+	_colorProgram.addAttribute("vertexColor");
 	_colorProgram.linkShaders();
 }
 
@@ -74,18 +74,22 @@ void MainGame::processInput() {
 void MainGame::gameLoop() {
 	while (_gameState != GameState::EXIT) {
 		processInput();
+		_time += 0.01;
 		drawGame();
 	}
 }
 
 void MainGame::drawGame() {
+
 	//Set base depth to 1.0
 	glClearDepth(1.0);
 	//Clear the color and depth buffer
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-
 	_colorProgram.use();
+
+	GLuint timeLocation = _colorProgram.getUniformLocation("time");
+	glUniform1f(timeLocation, _time);
 
 	_sprite.draw();
 

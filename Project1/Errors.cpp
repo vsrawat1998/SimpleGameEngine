@@ -1,5 +1,6 @@
 #include "Errors.h"
 #include<iostream>
+#include<cstdlib>
 #include<SDL/SDL.h>
 
 void fatalError(std::string errString) {
@@ -8,4 +9,5 @@ void fatalError(std::string errString) {
 	int x;
 	std::cin >> x;
 	SDL_Quit();
+	exit(1);
 }
